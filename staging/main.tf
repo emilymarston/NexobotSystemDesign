@@ -10,7 +10,7 @@ terraform {
   cloud {
     organization = "Nexobot"
     workspaces {
-      name = "Nexobot-staging"
+      name = "Nexobot - prod"
     }
   }
 
@@ -30,7 +30,7 @@ provider "aws" {
 
 # Module References
 module "cache" {
-  source          = "./cache"
+  source          = "./modules/cache"
   aws_region      = var.aws_region
   ami_id          = var.ami_id
   key_pair        = var.key_pair
@@ -39,7 +39,7 @@ module "cache" {
 }
 
 module "database" {
-  source          = "./database"
+  source          = "./modules/database"
   aws_region      = var.aws_region
   ami_id          = var.ami_id
   key_pair        = var.key_pair
@@ -48,7 +48,7 @@ module "database" {
 }
 
 module "ec2" {
-  source          = "./ec2"
+  source          = "./modules/ec2"
   aws_region      = var.aws_region
   ami_id          = var.ami_id
   key_pair        = var.key_pair
@@ -57,18 +57,18 @@ module "ec2" {
 }
 
 module "ecs" {
-  source          = "./ecs"
+  source          = "./modules/ecs"
   aws_region      = var.aws_region
   # Add other module-specific variables
 }
 
-module "load_balancer" {
-  source          = "./load_balancer"
+/* module "load_balancer" {
+  source          = "./modules/load_balancer"
   aws_region      = var.aws_region
   subnet_ids      = [var.subnet_id]
   security_groups = [module.ec2.security_group_id]
   # Add other module-specific variables
-}
+} */
 
 # Docker Compose definition 
 resource "null_resource" "run_docker_compose" {
